@@ -218,7 +218,7 @@ for file in $(find %{_vpp_install_dir}/*/lib/python2.7/site-packages/ -type f -p
 do
 	install -p -m755 $file %{buildroot}%{python_sitelib}/vpp_papi/
 done
-chmod -x %{buildroot}%{python_sitelib}/vpp_papi/*.txt
+chmod -x %{buildroot}%{python_sitelib}/*.egg-info/*.txt
 
 #
 # devel
@@ -309,6 +309,10 @@ export NO_BRP_CHECK_RPATH=true
 %files devel
 %dir %{_datadir}/doc/vpp
 %dir %{_datadir}/doc/vpp/examples
+/usr/bin/vppapigen
+/usr/bin/vapi_c_gen.py
+/usr/bin/vapi_cpp_gen.py
+/usr/bin/vapi_json_parser.py
 %{_libdir}/*.so
 %{_includedir}/*
 %{_datadir}/doc/vpp/examples/sample-plugin

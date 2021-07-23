@@ -181,6 +181,11 @@ endif
 endif
 
 ifeq ($(OS_ID),opensuse-leap)
+ifeq ($(SUSE_ID),15.3)
+	RPM_SUSE_DEVEL_DEPS += curl libstdc++-devel bison gcc-c++ zlib-devel xmlto asciidoc
+	RPM_SUSE_DEVEL_DEPS += libboost_headers-devel libboost_thread-devel lsb-release
+	RPM_SUSE_PYTHON_DEPS += python3 python2-ply
+endif
 ifeq ($(SUSE_ID),15.0)
 	RPM_SUSE_DEVEL_DEPS += libboost_headers-devel libboost_thread-devel gcc git curl
 	RPM_SUSE_PYTHON_DEPS += python3-ply python2-virtualenv
