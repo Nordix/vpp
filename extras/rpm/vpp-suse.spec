@@ -146,7 +146,7 @@ export VPP_BUILD_HOST=SUSE
 
 make -C build-root V=1 CC=gcc-7 CXX=g++-7 PLATFORM=vpp TAG=vpp install-packages
 
-cd %{_vpp_build_dir}/../src/vpp-api/python && %{py2_build}
+cd %{_vpp_build_dir}/../src/vpp-api/python && %{py3_build}
 
 %pre
 # Add the vpp group
@@ -211,19 +211,12 @@ do
 done
 
 # Python bindings
-cd %{_vpp_build_dir}/../src/vpp-api/python && %{py2_install}
-
-mkdir -p -m755 %{buildroot}%{python_sitelib}/vpp_papi
-for file in $(find %{_vpp_install_dir}/*/lib/python2.7/site-packages/ -type f -print | grep -v pyc | grep -v pyo)
-do
-	install -p -m755 $file %{buildroot}%{python_sitelib}/vpp_papi/
-done
-chmod -x %{buildroot}%{python_sitelib}/*.egg-info/*.txt
+cd %{_vpp_build_dir}/../src/vpp-api/python && %{py3_install}
 
 #
 # devel
 #
-for dir in %{_vpp_install_dir}/{vom,vpp}/include/
+for dir in %{_vpp_install_dir}/vpp/include/
 do
 	for subdir in $(cd ${dir} && find . -type d -print)
 	do
@@ -303,8 +296,8 @@ export NO_BRP_CHECK_RPATH=true
 %{_datadir}/doc/vpp/examples/lua
 
 %files api-python
-%dir %{python_sitelib}/vpp_papi*
-%{python_sitelib}/vpp_papi*
+%dir %{python3_sitelib}/vpp_*
+%{python3_sitelib}/vpp_*
 
 %files devel
 %dir %{_datadir}/doc/vpp
