@@ -158,7 +158,7 @@ SUSE_ID= $(shell grep '^VERSION_ID=' /etc/os-release | cut -f2- -d= | sed -e 's/
 RPM_SUSE_BUILDTOOLS_DEPS = autoconf automake ccache check-devel chrpath
 RPM_SUSE_BUILDTOOLS_DEPS += clang cmake indent libtool make ninja python3-ply
 
-RPM_SUSE_DEVEL_DEPS = glibc-devel-static libnuma-devel
+RPM_SUSE_DEVEL_DEPS = glibc-devel-static libnuma-devel libelf-devel
 RPM_SUSE_DEVEL_DEPS += libopenssl-devel openssl-devel mbedtls-devel libuuid-devel
 
 RPM_SUSE_PYTHON_DEPS = python-devel python3-devel python-pip python3-pip
@@ -182,9 +182,9 @@ endif
 
 ifeq ($(OS_ID),opensuse-leap)
 ifeq ($(SUSE_ID),15.3)
-	RPM_SUSE_DEVEL_DEPS += curl libstdc++-devel bison gcc-c++ zlib-devel xmlto 
+	RPM_SUSE_DEVEL_DEPS += curl libstdc++-devel bison gcc-c++ zlib-devel xmlto
 	RPM_SUSE_DEVEL_DEPS += libboost_headers-devel libboost_thread-devel lsb-release
-	RPM_SUSE_DEVEL_DEPS += asciidoc git 	
+	RPM_SUSE_DEVEL_DEPS += asciidoc git
 	RPM_SUSE_PYTHON_DEPS += python3 python2-ply
 endif
 ifeq ($(SUSE_ID),15.0)

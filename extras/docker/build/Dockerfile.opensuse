@@ -9,6 +9,7 @@ WORKDIR /vpp
 RUN zypper install -y make sudo
 COPY . .
 RUN UNATTENDED=y make install-dep
+RUN ln -s /usr/bin/cmake /usr/bin/cmake3
 RUN UNATTENDED=y make install-ext-deps
 RUN make pkg-rpm
 CMD ["/bin/bash"]
