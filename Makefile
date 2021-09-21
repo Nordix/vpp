@@ -56,7 +56,7 @@ endif
 
 ifeq ($(filter ubuntu debian,$(OS_ID)),$(OS_ID))
 PKG=deb
-else ifeq ($(filter rhel centos fedora opensuse opensuse-leap opensuse-tumbleweed,$(OS_ID)),$(OS_ID))
+else ifeq ($(filter rhel centos fedora opensuse-leap,$(OS_ID)),$(OS_ID))
 PKG=rpm
 endif
 
@@ -165,20 +165,6 @@ RPM_SUSE_PYTHON_DEPS = python-devel python3-devel python-pip python3-pip
 RPM_SUSE_PYTHON_DEPS += python-rpm-macros python3-rpm-macros
 
 RPM_SUSE_PLATFORM_DEPS = distribution-release shadow rpm-build
-
-ifeq ($(OS_ID),opensuse)
-ifeq ($(SUSE_NAME),tumbleweed)
-	RPM_SUSE_DEVEL_DEPS = libboost_headers1_68_0-devel-1.68.0  libboost_thread1_68_0-devel-1.68.0 gcc
-	RPM_SUSE_PYTHON_DEPS += python3-ply python2-virtualenv
-endif
-ifeq ($(SUSE_ID),15.0)
-	RPM_SUSE_DEVEL_DEPS += libboost_headers-devel libboost_thread-devel gcc
-	RPM_SUSE_PYTHON_DEPS += python3-ply python2-virtualenv
-else
-	RPM_SUSE_DEVEL_DEPS += libboost_headers1_68_0-devel-1.68.0 gcc6
-	RPM_SUSE_PYTHON_DEPS += python-virtualenv
-endif
-endif
 
 ifeq ($(OS_ID),opensuse-leap)
 ifeq ($(SUSE_ID),15.3)
@@ -348,17 +334,11 @@ else ifeq ($(OS_ID),fedora)
 	@sudo -E dnf install $(CONFIRM) $(RPM_DEPENDS)
 	@sudo -E debuginfo-install $(CONFIRM) glibc openssl-libs mbedtls-devel zlib
 endif
-else ifeq ($(filter opensuse-tumbleweed,$(OS_ID)),$(OS_ID))
-	@sudo -E zypper refresh
-	@sudo -E zypper install -y $(RPM_SUSE_DEPENDS)
 else ifeq ($(filter opensuse-leap,$(OS_ID)),$(OS_ID))
 	@sudo -E zypper refresh
 	@sudo -E zypper install  -y $(RPM_SUSE_DEPENDS)
-else ifeq ($(filter opensuse,$(OS_ID)),$(OS_ID))
-	@sudo -E zypper refresh
-	@sudo -E zypper install -y $(RPM_SUSE_DEPENDS)
 else
-	$(error "This option currently works only on Ubuntu, Debian, RHEL, CentOS or openSUSE systems")
+	$(error "This option currently works only on Ubuntu, Debian, RHEL, CentOS or openSUSE-leap systems")
 endif
 	git config commit.template .git_commit_template.txt
 
