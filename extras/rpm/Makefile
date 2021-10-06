@@ -29,6 +29,8 @@ all: RPM
 # SUSE osleap15
 ifeq ($(filter opensuse-leap,$(OS_ID)),$(OS_ID))
 SPEC_FILE='vpp-suse.spec'
+else ifeq ($(filter sles,$(OS_ID)),$(OS_ID))
+SPEC_FILE='vpp-suse.spec'
 else
 SPEC_FILE='vpp.spec'
 endif
