@@ -56,7 +56,7 @@ endif
 
 ifeq ($(filter ubuntu debian,$(OS_ID)),$(OS_ID))
 PKG=deb
-else ifeq ($(filter rhel centos fedora opensuse-leap,$(OS_ID)),$(OS_ID))
+else ifeq ($(filter rhel centos fedora sles opensuse-leap,$(OS_ID)),$(OS_ID))
 PKG=rpm
 endif
 
@@ -163,12 +163,24 @@ RPM_SUSE_BUILDTOOLS_DEPS = autoconf automake ccache check-devel chrpath
 RPM_SUSE_BUILDTOOLS_DEPS += clang cmake indent libtool make ninja python3-ply
 
 RPM_SUSE_DEVEL_DEPS = glibc-devel-static libnuma-devel libelf-devel
-RPM_SUSE_DEVEL_DEPS += libopenssl-devel openssl-devel mbedtls-devel libuuid-devel
+RPM_SUSE_DEVEL_DEPS += libopenssl-devel mbedtls-devel libuuid-devel
 
-RPM_SUSE_PYTHON_DEPS = python-devel python3-devel python-pip python3-pip
-RPM_SUSE_PYTHON_DEPS += python-rpm-macros python3-rpm-macros
+RPM_SUSE_PYTHON_DEPS = python-devel python3-devel python3-pip
+RPM_SUSE_PYTHON_DEPS += python-rpm-macros
 
-RPM_SUSE_PLATFORM_DEPS = distribution-release shadow rpm-build
+RPM_SUSE_PLATFORM_DEPS = shadow rpm-build
+
+ifeq ($(OS_ID),sles)
+        RPM_SUSE_DEVEL_DEPS += libopenssl-1_1-devel libboost_thread1_66_0-devel
+        RPM_SUSE_DEVEL_DEPS += curl libstdc++-devel bison gcc-c++ zlib-devel
+        RPM_SUSE_DEVEL_DEPS += libboost_headers1_66_0-devel lsb-release
+        RPM_SUSE_PYTHON_DEPS += python2-pip python2-ply
+else
+        RPM_SUSE_DEVEL_DEPS += openssl-devel
+        RPM_SUSE_PYTHON_DEPS += python-pip python3-rpm-macros
+        RPM_SUSE_PLATFORM_DEPS += distribution-release
+endif
+
 
 ifeq ($(OS_ID),opensuse-leap)
 ifeq ($(OS_VERSION_ID),15.3)
@@ -340,6 +352,9 @@ endif
 else ifeq ($(filter opensuse-leap,$(OS_ID)),$(OS_ID))
 	@sudo -E zypper refresh
 	@sudo -E zypper install  -y $(RPM_SUSE_DEPENDS)
+else ifeq ($(filter sles,$(OS_ID)),$(OS_ID))
+	@sudo -E zypper refresh
+	@sudo -E zypper install -y --allow-downgrade $(RPM_SUSE_DEPENDS)
 else
 	$(error "This option currently works only on Ubuntu, Debian, RHEL, CentOS or openSUSE-leap systems")
 endif
