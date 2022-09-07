@@ -56,7 +56,7 @@ endif
 
 ifeq ($(filter ubuntu debian,$(OS_ID)),$(OS_ID))
 PKG=deb
-else ifeq ($(filter rhel centos fedora opensuse-leap,$(OS_ID)),$(OS_ID))
+else ifeq ($(filter rhel centos fedora sles opensuse-leap,$(OS_ID)),$(OS_ID))
 PKG=rpm
 endif
 
@@ -174,6 +174,17 @@ ifeq ($(OS_ID),opensuse-leap)
 	RPM_SUSE_DEVEL_DEPS += xmlto openssl-devel asciidoc git nasm
 	RPM_SUSE_PYTHON_DEPS += python3 python3-ply python3-virtualenv
 	RPM_SUSE_PLATFORM_DEPS += distribution-release
+endif
+
+ifeq ($(OS_ID),sles)
+RPM_SUSE_DEVEL_DEPS += mbedtls-devel libboost_headers1_66_0-devel
+RPM_SUSE_DEVEL_DEPS += libopenssl-1_1-devel libboost_thread1_66_0-devel
+ifeq ($(OS_VERSION_ID),15.4)
+RPM_SUSE_PYTHON_DEPS += python3 python3-ply
+else
+RPM_SUSE_PYTHON_DEPS += python-devel python-rpm-macros
+RPM_SUSE_PYTHON_DEPS += python2-pip python2-ply
+endif
 endif
 
 RPM_SUSE_DEPENDS += $(RPM_SUSE_BUILDTOOLS_DEPS) $(RPM_SUSE_DEVEL_DEPS) $(RPM_SUSE_PYTHON_DEPS) $(RPM_SUSE_PLATFORM_DEPS)
@@ -333,6 +344,9 @@ endif
 else ifeq ($(filter opensuse-leap-15.3 opensuse-leap-15.4 ,$(OS_ID)-$(OS_VERSION_ID)),$(OS_ID)-$(OS_VERSION_ID))
 	@sudo -E zypper refresh
 	@sudo -E zypper install  -y $(RPM_SUSE_DEPENDS)
+else ifeq ($(filter sles-15.3 sles-15.4 ,$(OS_ID)-$(OS_VERSION_ID)),$(OS_ID)-$(OS_VERSION_ID))
+	@sudo -E zypper refresh
+	@sudo -E zypper install -y --allow-downgrade $(RPM_SUSE_DEPENDS)
 else
 	$(error "This option currently works only on Ubuntu, Debian, RHEL, CentOS or openSUSE-leap systems")
 endif

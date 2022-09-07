@@ -27,7 +27,7 @@ PC=%
 all: RPM
 
 # SUSE osleap15
-ifeq ($(filter opensuse-leap,$(OS_ID)),$(OS_ID))
+ifeq ($(filter sles opensuse-leap,$(OS_ID)),$(OS_ID))
 SRC_SPEC_DIR="opensuse"
 else
 SRC_SPEC_DIR="."
